@@ -1,0 +1,150 @@
+#!/bin/bash
+
+PROJECTNAME="Project"
+AUTHOR="Chris Perivolaropoulos"
+EMAIL="darksaga2006@gmail.com"
+DESCRIPTION="Description of $PROJECTNAME"
+GITHUB="none"
+USERNAME="fakedrake"
+
+HELP_MESSAGE="Create a very simple python package in the current directory.
+
+OPTIONS:
+--name <string>		Package name (eg MyPackage)
+--author <string>	Package author (eg \"$AUTHOR\", this is also the default)
+--email <string>	Author email
+--description <string>	Package description
+--user <string>		Username of github
+--github <string>	Github short path in the form \"$USERNAME/$PROJECTNAME\". 'none' to not use github.
+--help:			This message
+"
+
+VIRTUALENV_CMD=virtualenv2
+
+for i in $@; do
+    case $1 in
+	"--name")
+	    shift
+	    PROJECTNAME=$1;;
+	"--user")
+	    shift
+	    USERNAME=$1;;
+	"--author")
+	    shift
+	    AUTHOR=$1;;
+	"--email")
+	    shift
+	    EMAIL=$1;;
+	"--description")
+	    shift
+	    DESCRIPTION=$1;;
+	"--github")
+	    shift
+	    GITHUB=$1;;
+	"--help")
+	    echo "$HELP_MESSAGE"
+	    exit 0;;
+    esac
+    shift
+done
+
+if [ $GITHUB = "guess" ]; then
+    GITHUB="$USERNAME/$PROJECTNAME"
+fi
+
+echo -e "Name:\t\t $PROJECTNAME"
+echo -e "User Name:\t $USERNAME"
+echo -e "Author:\t\t $AUTHOR"
+echo -e "e-mail:\t\t $EMAIL"
+echo -e "Description:\t $DESCRIPTION"
+echo -e "Github:\t\t $GITHUB"
+if [[ "$GITHUB" != "none" ]]; then
+    echo -e "ATTENTION: It is advised that you create the remote github repo before creating the project so I know where to make the initial commit."
+fi
+echo "Is everything in order?[Y/n]"
+
+read yon
+if [ "$yon" != "" ] && [ "${yon:0:1}" != "y" ] && [ "${yon:0:1}" != "Y" ]; then
+    echo "Ok rerun the command. No changes made."
+    exit 0
+fi
+
+
+
+LPNAME=`echo $PROJECTNAME | tr '[A-Z]' '[a-z]'`
+
+SETUP="
+import os
+from setuptools import setup
+
+# Utility function to read the README file.
+# Used for the long_description. It's nice, because now 1) we have a top level
+# README file and 2) it's easier to type in the README file than to put a raw
+# string in below ...
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
+setup(
+    name = \"$PROJECTNAME\",
+    version = \"0.0.1\",
+    author = \"$AUTHOR\",
+    author_email = \"$EMAIL\",
+    description = (\"$DESCRIPTION\"),
+    license = \"GPL\",
+    keywords = \"\",
+    url = \"http://packages.python.org/$PROJECTNAME\",
+    packages=['$LPNAME', '$LPNAME.test'],
+    install_requires=[],
+    tests_require=['nose'],
+    long_description=read('README.org'),
+    test_suite='$LPNAME.test',
+    classifiers=[
+        \"Programming Language :: Python :: 2.7\",
+        \"License :: OSI Approved :: GNU General Public License v2 (GPLv2)\"
+    ],
+)"
+mkdir $PROJECTNAME
+cd $PROJECTNAME
+
+$VIRTUALENV_CMD --no-site-packages .
+bin/pip install ipdb
+
+mkdir $LPNAME
+touch $LPNAME/__init__.py
+mkdir $LPNAME/test/
+touch $LPNAME/test/__init__.py
+README="* $PROJECTNAME
+  $DESCRIPTION
+"
+
+MANIFEST="
+include *txt
+recursive-include $LPNAME *.py *.txt
+recursive-include $LPNAME/test *.py *.txt
+prune bin"
+
+GITIGNORE="
+*.pyc
+bin/
+lib/
+local/
+build/
+share/
+include/
+*.egg-info
+*.egg
+"
+
+echo "$MANIFEST" > MANIFEST.in
+echo "$SETUP" > setup.py
+echo "$GITIGNORE" > .gitignore
+echo "$README" > README.org
+
+git init
+git add setup.py MANIFEST.in README.org $LPNAME/__init__.py $LPNAME/test/__init__.py .gitignore
+git commit -a -m "Initial commit"
+
+if [ $GITHUB != "none" ]; then
+    git remote add origin git@github.com:$GITHUB
+    git push -u origin master
+fi
