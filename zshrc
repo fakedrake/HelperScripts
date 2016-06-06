@@ -7,6 +7,11 @@ function try_source {
     fi
 }
 
+if [ $(uname) = "Darwin" ]; then
+    try_source osx.zsh
+fi
+
+try_source personal.zsh
 try_source oh-my-zsh.zsh
 try_source theme.zsh
 try_source variables.zsh
@@ -19,12 +24,8 @@ try_source python.zsh
 try_source serial.zsh
 try_source depot_tools.zsh
 try_source gpg.zsh
-try_source personal.zsh
 try_source completions/notmuch-completion.zsh
 
-if [ $(uname) = "Darwin" ]; then
-    try_source osx.zsh
-fi
 
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 

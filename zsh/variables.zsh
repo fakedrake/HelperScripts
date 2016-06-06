@@ -1,10 +1,11 @@
-
-if [ -f /usr/share/source-highlight/src-hilite-lesspipe.sh ]; then
-    export LESSOPEN="| /usr/share/source-highlight/src-hilite-lesspipe.sh %s"
+HL_PIPE_LESS=${HL_PIPE_LESS:-/usr/share/source-highlight/src-hilite-lesspipe.sh}
+if [ -f $HL_PIPE_LESS ]; then
+    export LESSOPEN="| $HL_PIPE_LESS %s"
     export LESS=' -R'
 else
     echo "Less highlighting scripts not found, install it with"
-    echo "\t$ sudo apt-get install source-highlight"
+    echo "\t$ p source-highlight"
+    echo "Make sure it is in $HL_PIPE_LESS"
 fi
 
 export EDITOR='emacsclient'
