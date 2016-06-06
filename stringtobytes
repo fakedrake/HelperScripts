@@ -1,0 +1,72 @@
+#!/usr/bin/env python
+#
+# Example:
+# $ sudo dtruss -n firefox -t write |& stringtobytes '^ [0-9]*/[0-9]*:  write\(.*?, "(.*)",.*$' 1
+
+import sys
+import re
+import string
+
+class Reader(object):
+    @staticmethod
+    def fromargs(args):
+        regex = None
+        group = 0
+
+        if len(args) >= 2:
+            regex = args[1]
+
+        if len(args) >= 3:
+            group = int(args[2])
+
+        return Reader(regex, group)
+
+
+
+    def __init__(self, regex=None, group=0):
+        if regex is not None:
+            self.regex = re.compile(regex)
+            self.group = group
+
+        else:
+            self.regex = None
+            self.group = None
+
+
+    def string_data(self, line):
+        if self.regex is not None:
+            return self.match(line).group(0)
+
+        return line
+
+    def hex_data(self, line):
+        if not all([c in string.printable for c in line]):
+            return ' '.join(map(lambda x: hex(ord(x)),
+                                list(line.decode('string-escape'))))
+
+        return line
+
+    def hex_line(self, line):
+        if self.regex:
+            m = self.regex.match(line)
+
+            if m:
+                s,e = m.start(self.group), m.end(self.group)
+                return line[:s] + self.hex_data(line) + line[e:]
+
+        return self.hex_data(line)
+
+def main ():
+    reader = Reader.fromargs(sys.argv)
+
+    print "Group:", reader.group
+    line = sys.stdin.readline()
+    while line:
+        sys.stdout.write(reader.hex_line(line) + "\n")
+        sys.stdout.flush()
+
+        line = sys.stdin.readline()
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,54 @@
+[general]
+maxaccounts = 1
+ui = ttyui
+accounts = gmail
+pythonfile = ~/.offlineimap.py
+
+# GMAIL
+[Account gmail]
+autorefresh = 5
+quick = 10
+localrepository = gmail-local
+remoterepository = gmail-remote
+status_backend = sqlite
+
+[Repository gmail-local]
+type = Maildir
+localfolders = ~/Mail/gmail
+
+[Repository gmail-remote]
+type = Gmail
+remoteuser = darksaga2006@gmail.com
+remotepasseval = mailpasswd("gmail")
+realdelete = no
+maxconnections = 3
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+holdconnectionopen = yes
+
+# # CSAIL
+# [Account csail]
+# localrepository = csail-local
+# remoterepository = csail-remote
+# status_backend = sqlite
+
+# [Repository csail-local]
+# type = Maildir
+# localfolders = ~/Mail/csail
+
+# [Repository csail-remote]
+# type = IMAP
+# remoteuser = cperivol
+# remotepasseval = mailpasswd("csail")
+# remotehost = imap.csail.mit.edu
+# ssl = yes
+# realdelete = no
+# maxconnections = 3
+# sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+
+[mbnames]
+enabled = yes
+filename = ~/.mutt/mailboxes
+header = "mailboxes "
+peritem = "+%(accountname)s/%(foldername)s"
+sep = " "
+footer = "\n"

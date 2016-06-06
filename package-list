@@ -1,0 +1,10 @@
+base-devel
+git
+svn
+cvs
+zsh
+python2
+python2-virtualenv
+firefox
+thunderbird
+emacs

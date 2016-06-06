@@ -1,0 +1,15 @@
+#compdef k
+
+_kanbanize_my_issues() {
+    my_issues=(`y`)
+}
+
+_k () {
+    local curcontext="$curcontext" state line
+    typeset -A opt_args
+
+    arguments '1: :->command' '2: :->command2'
+
+    case $state in
+
+}

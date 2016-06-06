@@ -1,0 +1,7 @@
+* Usage
+  Just run =make= and everything will take care of themselves.
+
+* Roadmap
+  - Emacs
+  - Python
+  - Ruby
