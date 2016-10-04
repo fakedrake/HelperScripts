@@ -59,3 +59,4 @@ alias awscreen="ssh -t -i ~/Desktop/id_rsa fake@ec2-54-174-134-98.compute-1.amaz
 alias pyserve='python2 -m SimpleHTTPServer'
 alias rh='stack runhaskell'
 alias ec="$(dirname $EMACS)/emacsclient"
+alias cleanmail="notmuch tag -unread -- '*'"

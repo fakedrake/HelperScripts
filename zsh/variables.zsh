@@ -9,7 +9,7 @@ else
 fi
 
 export EDITOR='emacsclient'
-export PATH=$HOME/.local/bin:$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/bin/core_perl:$HOME/.rvm/bin:/usr/local/texlive/2015/bin/x86_64-darwin
+export PATH=$HOME/.local/bin:$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/bin/core_perl:$HOME/.rvm/bin:/usr/local/texlive/2015/bin/x86_64-darwin:$PATH
 export PATH="$HOME/.cabal/bin:/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
 export COMPLETION_WAITING_DOTS="true"
 # CCache
