@@ -4,7 +4,11 @@ all: zsh vimperator
 
 zsh: ~/.zshrc
 
-vimperator: ~/.vimperatorrc
+vimperator: ~/.vimperatorrc ~/vimperator/plugins
+
+~/vimperator/plugins:
+	mkdir -p ~/vimperator
+	ln -s `pwd`/vimperator_plugins $@
 
 ~/.vimperatorrc:
 	ln -s $(PWD)/vimperatorrc ~/.vimperatorrc
