@@ -2,19 +2,24 @@
 
 all: zsh vimperator
 
-zsh: ~/.zshrc
+zsh: ~/.zshrc ~/.oh-my-zsh/custom/plugins/zsh-completions
 
-vimperator: ~/.vimperatorrc ~/vimperator/plugins
+~/.oh-my-zsh/custom/plugins/zsh-completions: ~/.oh-my-zsh
+	git clone "https://github.com/zsh-users/zsh-completions" $@
 
-~/vimperator/plugins:
-	mkdir -p ~/vimperator
+
+
+vimperator: ~/.vimperatorrc ~/.vimperator/plugins
+
+~/.vimperator/plugins:
+	mkdir -p $(shell dirname $@)
 	ln -s `pwd`/vimperator_plugins $@
 
 ~/.vimperatorrc:
 	ln -s $(PWD)/vimperatorrc ~/.vimperatorrc
 
 ~/.zshrc:  ~/.oh-my-zsh
-	ln -s $(PWD)/zshrc ~/.zshrc
+	rm -rf $@ && ln -s $(PWD)/zshrc ~/.zshrc
 
 ~/.oh-my-zsh:
 	curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh \
