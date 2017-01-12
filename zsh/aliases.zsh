@@ -22,8 +22,8 @@ fi
 
 if avail brew; then
     alias pup="brew cask update && brew upgrade"
-    function p {brew cask install "$1" || brew install "$1" }
-    function pse {brew cask search "$1" ; brew search "$1"}
+    function p { brew cask install "$1" || brew install "$1" }
+    function pse { brew cask search "$1" ; brew search "$1" }
 fi
 
 if avail emacs; then
