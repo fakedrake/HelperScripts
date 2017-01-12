@@ -11,13 +11,19 @@ pid=$!
 
 [ -x $mbsync ] || exit 1
 killall mbsync || true
+function mbsyncRunning {
+    ps aux | grep "mbsyn[c]" > /dev/null
+}
+function killMbsync {
+    killall mbsync || true
+}
 
 function fail {
-    if ps aux | grep "mbsyn[c]"; then
+    if mbsyncRunning; then
         log "Fail: already running mbsync"
-        killall mbsync || true
+    else
+        log "Fail: Something went wrong with mbsync"
     fi
-
     exit 1
 }
 
@@ -33,10 +39,23 @@ function log {
     fi
 }
 
+function waitForMbsyncToStop {
+    for i in {0..10}; do
+        echo "Waiting for mbsync $i..."
+        if ! mbsyncRunning; then
+            return
+        fi
+        sleep 2;
+    done
+    killMbsync
+}
+
 function getBox {
     if ! $mbsync "$1"; then
-        log "Failed: $mbsync $1";
-        fail;
+        if ! waitForMbsyncToStop || ! $mbsync "$1"; then
+            log "Failed: $mbsync $1";
+            fail;
+        fi
     fi
 
     if ! $notmuch new; then
