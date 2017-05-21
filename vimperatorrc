@@ -132,3 +132,8 @@ EOM
 
 " vim: ft=vimperator
 js services.services.autoCompleteSearch.class_="@mozilla.org/autocomplete/search;1?name=unifiedcomplete"
+map s :javascript (function () {var v = window.content.window.document.getElementsByTagName('video')[0] || window.content.window.document.getElementsByTagName('audio')[0]; if (!v) {liberator.echoerr('No video HTML5 element in this frame.'); return;}; if (v.paused) v.play(); else v.pause();})()<CR>
+set nextpattern=^Next$,\\bnext\\b,^>$,^(>>|»)$,^(>|»),(>|»)$,\\bmore\\b
+js hints.addMode('s', "Search field", function (e) {buffer.focusElement(e);}, function () {return "//input[contains(@placeholder,'earch')]"})
+js hints.addMode('c', 'Yank <pre> or <code> block', function (e) {util.copyToClipboard(e.textContent, true);}, function () '//pre | //code')
+javascript hints.addMode('e', 'Yank a title and the yar from doi as an org mode link', function (e) {try {year = "(" + liberator.plugins.libly.$U.getFirstNodeFromXPath("//a[contains(@href, 'doi.org')]").href.split('/').slice(-1)[0].split('.').filter(function (x) /^[0-9]+$/.test(x))[0] + ") ";} catch (e) {year = ""}; util.copyToClipboard(year + '[[' + window.content.window.location + '][' + e.textContent.trim() + ']]', true);}, function () '//h1 | //h2')
