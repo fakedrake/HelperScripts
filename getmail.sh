@@ -2,15 +2,27 @@
 # $ crontab -e
 # */5 * * * * NOTIFY=y /Users/drninjabatman/bin/getmail.sh >/tmp/stdout.log 2>/tmp/stderr.log
 set -e
-mbsync="/usr/local/bin/mbsync"
+mbsync=$(which mbsync)
 notify=/usr/local/bin/terminal-notifier
-notmuch=/usr/local/bin/notmuch
-emacsclient=/Applications/Emacs.app/Contents/MacOS/bin/emacsclient
+notmuch=$(which notmuch)
+emacsclien=$(which emacsclient)
+if [[ -z "$emacsclient" ]]; then
+    emacsclient=/Applications/Emacs.app/Contents/MacOS/bin/emacsclient
+fi
+
 nm="$emacsclient -e \"(progn (call-interactively 'nm) (call-interactively 'other-frame))\""
 pid=$!
 
 [ -x $mbsync ] || exit 1
 killall mbsync || true
+
+function notification {
+    if [[ -x /usr/local/bin/terminal-notifier ]]; then
+        /usr/local/bin/terminal-notifier -title "$1" -message "$2" -exec "$3"
+    elif [[ -x /usr/bin/notify-send ]]; then
+        /usr/bin/notify-send "$1" "$2"
+    fi
+}
 function mbsyncRunning {
     ps aux | grep "mbsyn[c]" > /dev/null
 }
@@ -28,15 +40,11 @@ function fail {
 }
 
 function has_internet {
-    /sbin/ping -c 1 8.8.8.8 > /dev/null
+    ping -c 1 8.8.8.8 > /dev/null
 }
 
 function log {
-    if [[ -x $notify ]] && [[ -n $NOTIFY ]]; then
-        $notify -title "E-Mail" -message "$@" -execute "$nm"
-    else
-        echo $@
-    fi
+    notification "E-Mail" "$@" "$nm"
 }
 
 function waitForMbsyncToStop {

@@ -36,3 +36,5 @@ PERL_MM_OPT="INSTALL_BASE=/Users/drninjabatman/perl5"; export PERL_MM_OPT;
 if [[ "$TERM" = "dumb" ]]; then
    export PS1="> "
 fi
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

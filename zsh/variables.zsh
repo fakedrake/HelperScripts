@@ -26,3 +26,4 @@ export LANG=en_US.UTF-8
 export PATH=$PATH:/Users/drninjabatman/.cabal/bin
 export EMACS=/usr/bin/emacs
 export EDITOR="$(dirname $EMACS)/emacsclient"
+export GOPATH=~/gopath
