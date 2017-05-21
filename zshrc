@@ -38,3 +38,5 @@ if [[ "$TERM" = "dumb" ]]; then
 fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export PATH="/usr/local/opt/gettext/bin:$PATH"
+export PATH=${HOME}/perl5/perlbrew/bin:$PATH

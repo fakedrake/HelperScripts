@@ -12,6 +12,7 @@ fi
 
 nm="$emacsclient -e \"(progn (call-interactively 'nm) (call-interactively 'other-frame))\""
 pid=$!
+this_file=$0
 
 [ -x $mbsync ] || exit 1
 killall mbsync || true
@@ -27,20 +28,30 @@ function mbsyncRunning {
     ps aux | grep "mbsyn[c]" > /dev/null
 }
 function killMbsync {
-    killall mbsync || true
+    killall $this_file || true
 }
 
 function fail {
-    if mbsyncRunning; then
-        log "Fail: already running mbsync"
-    else
-        log "Fail: Something went wrong with mbsync"
+    local msg=${1:-"Something went wrong with mbsync"}
+    if ! mbsyncRunning; then
+        log "Fail: $msg"
     fi
     exit 1
 }
 
 function has_internet {
     ping -c 1 8.8.8.8 > /dev/null
+}
+
+function log_top_unread {
+    notmuch search --output=messages tag:unread \
+        | xargs notmuch show --entire-thread=false --format=text \; \
+        | sed "s/'/ /" \
+        | awk '/header{/{from="No sender";subject="No subject"}
+              /From: /{$1="";from=$0}
+              /Subject: /{$1="";subject=$0}
+              /header}/{print "terminal-notifier -title " "'"'"'"from"'"'"'  -message '"'"'"subject"'"'"'" }' \
+        | sed "s/' /'/g" | sed "s/''/' '/" | head -1 | bash
 }
 
 function log {
@@ -55,25 +66,25 @@ function waitForMbsyncToStop {
         fi
         sleep 2;
     done
-    killMbsync
 }
 
 function getBox {
     if ! $mbsync "$1"; then
-        if ! waitForMbsyncToStop || ! $mbsync "$1"; then
-            log "Failed: $mbsync $1";
-            fail;
+        if ! waitForMbsyncToStop && $mbsync "$1"; then
+            fail "$ mbsync $1 ($?)";
         fi
     fi
 
     if ! $notmuch new; then
-        log "Failed: $notmuch new";
+        log "Failed: $ notmuch new";
         fail;
     fi
 
     local new_mail=$($notmuch count tag:unread);
-    if [[ $new_mail -gt 0 ]]; then
+    if [[ $new_mail -gt 1 ]]; then
         log "New mail: $new_mail";
+    elif [[ $new_mail -gt 0 ]]; then
+        log_top_unread
     fi
 }
 

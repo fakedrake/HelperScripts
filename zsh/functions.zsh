@@ -144,3 +144,5 @@ function notify {
     if [[ $(($now-$LAST_COMMAND_TIMESTAMP)) -gt $NOTIFICATION_TIME ]]
     LAST_COMMAND_TIMESTAMP=$now
 }
+
+alias fgit="ssh -C forum git -C /home/drninjabatman/Projects/FluiDB"
