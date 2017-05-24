@@ -133,7 +133,7 @@ EOM
 " vim: ft=vimperator
 js services.services.autoCompleteSearch.class_="@mozilla.org/autocomplete/search;1?name=unifiedcomplete"
 map s :javascript (function () {var v = window.content.window.document.getElementsByTagName('video')[0] || window.content.window.document.getElementsByTagName('audio')[0]; if (!v) {liberator.echoerr('No video HTML5 element in this frame.'); return;}; if (v.paused) v.play(); else v.pause();})()<CR>
-map }} :javascript (function () {var v = window.content.window.document.getElementsByTagName('video')[0] || window.content.window.document.getElementsByTagName('audio')[0]; if (!v) {liberator.echoerr('No video HTML5 element in this frame.'); return;}; v.currentTime -= 10})()<CR>
+map }} :javascript (function () {var v = window.content.window.document.getElementsByTagName('video')[0] || window.content.window.document.getElementsByTagName('audio')[0]; if (!v) {liberator.echoerr('No video HTML5 element in this frame.'); return;}; v.currentTime += 10})()<CR>
 map {{ :javascript (function () {var v = window.content.window.document.getElementsByTagName('video')[0] || window.content.window.document.getElementsByTagName('audio')[0]; if (!v) {liberator.echoerr('No video HTML5 element in this frame.'); return;}; v.currentTime -= 10})()<CR>
 
 map Vp :javascript (function () {var cl = window.content.window.document.getElementById('movie_player').classList; if (cl.contains('ytp-autohide')) cl.remove('ytp-autohide'); else cl.add('ytp-autohide');})()<CR>
