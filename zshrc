@@ -1,7 +1,7 @@
 #!/usr/bin/zsh
-
+HELPER=$HOME/Projects/helperscripts
 function try_source {
-    file="$HOME/bin/zsh/$1"
+    file="$HELPER/zsh/$1"
     if [ -f "$file" ]; then
 	source "$file"
     fi
@@ -21,8 +21,7 @@ try_source bash_compat.zsh
 try_source mit.zsh
 # try_source thinksilicon.zsh
 try_source python.zsh
-try_source serial.zsh
-try_source depot_tools.zsh
+# try_source depot_tools.zsh
 try_source gpg.zsh
 try_source completions/notmuch-completion.zsh
 
@@ -40,3 +39,4 @@ fi
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export PATH="/usr/local/opt/gettext/bin:$PATH"
 export PATH=${HOME}/perl5/perlbrew/bin:$PATH
+

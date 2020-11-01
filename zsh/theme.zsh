@@ -1,6 +1,7 @@
 # This is a full blown oh-my-zsh theme but insetad of forking the
 # whole project for these minor little things, just source this.
 
+
 function prompt_char {
     if [ $UID -eq 0 ]; then echo "#"; else echo $; fi
 }
